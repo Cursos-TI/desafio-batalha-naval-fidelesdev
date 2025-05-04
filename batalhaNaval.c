@@ -1,40 +1,87 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
 
 // Desafio Batalha Naval - MateCheck
 // Este código inicial serve como base para o desenvolvimento do sistema de Batalha Naval.
 // Siga os comentários para implementar cada parte do desafio.
 
+bool verificarPosicoes(int arrayPosicoes[], int tamanho){
+    bool conflito = false; 
+    for(int i = 0; i < tamanho; i++){
+        if(arrayPosicoes[i] != 0){
+            conflito = true;
+            break;
+        }
+    }
+    return conflito;
+}
+
 int main() {
-    // Nível Novato - Posicionamento dos Navios
-    // Sugestão: Declare uma matriz bidimensional para representar o tabuleiro (Ex: int tabuleiro[5][5];).
-    // Sugestão: Posicione dois navios no tabuleiro, um verticalmente e outro horizontalmente.
-    // Sugestão: Utilize `printf` para exibir as coordenadas de cada parte dos navios.
+    int tabuleiro[10][10];
+    int nLinhas = sizeof(tabuleiro)/sizeof(*tabuleiro);
+    int nColunas = sizeof(*tabuleiro)/sizeof(**tabuleiro);
+    for(int i = 0; i < nLinhas; i++){
+        for(int j = 0; j < nColunas; j++){
+            tabuleiro[i][j] = 0;
+        }
+    }
 
-    // Nível Aventureiro - Expansão do Tabuleiro e Posicionamento Diagonal
-    // Sugestão: Expanda o tabuleiro para uma matriz 10x10.
-    // Sugestão: Posicione quatro navios no tabuleiro, incluindo dois na diagonal.
-    // Sugestão: Exiba o tabuleiro completo no console, mostrando 0 para posições vazias e 3 para posições ocupadas.
+    //inserção do navio vertical no tabuleiro
+    int navioVertical[] = {3,3,3};
+    int posLinhaNavioVertical = 3;
+    int posColunaNavioVertical = 8;
+    int tamanhoNavioVertical = sizeof(navioVertical)/sizeof(*navioVertical);
 
-    // Nível Mestre - Habilidades Especiais com Matrizes
-    // Sugestão: Crie matrizes para representar habilidades especiais como cone, cruz, e octaedro.
-    // Sugestão: Utilize estruturas de repetição aninhadas para preencher as áreas afetadas por essas habilidades no tabuleiro.
-    // Sugestão: Exiba o tabuleiro com as áreas afetadas, utilizando 0 para áreas não afetadas e 1 para áreas atingidas.
+    if(
+        posColunaNavioVertical < 0 || posColunaNavioVertical > nColunas ||
+        posLinhaNavioVertical < 0 || posLinhaNavioVertical > nLinhas
+    ){
+        printf("coordenada do navio vertical invalida");
+        return 1;
+    }
+    else if(posLinhaNavioVertical-1 + tamanhoNavioVertical > nLinhas){
+        printf("navio muito grande para o tabuleiro na posicao (%d,%d)", posLinhaNavioVertical, posColunaNavioVertical);
+        return 1;
+    }
+    for(int i = 0; i < tamanhoNavioVertical; i++){
+        tabuleiro[i + posLinhaNavioVertical-1][posColunaNavioVertical-1] = navioVertical[i];
+    }
 
-    // Exemplos de exibição das habilidades:
-    // Exemplo para habilidade em cone:
-    // 0 0 1 0 0
-    // 0 1 1 1 0
-    // 1 1 1 1 1
-    
-    // Exemplo para habilidade em octaedro:
-    // 0 0 1 0 0
-    // 0 1 1 1 0
-    // 0 0 1 0 0
 
-    // Exemplo para habilidade em cruz:
-    // 0 0 1 0 0
-    // 1 1 1 1 1
-    // 0 0 1 0 0
+    int navioHorizontal[] = {3,3,3};
+    int posLinhaNavioHorizontal = 3;
+    int posColunaNavioHorizontal = 4;
+    int tamanhoNavioHorizontal = sizeof(navioHorizontal)/sizeof(*navioHorizontal);
+    if(
+        posColunaNavioHorizontal < 0 || posColunaNavioHorizontal > nColunas ||
+        posLinhaNavioHorizontal < 0 || posLinhaNavioHorizontal > nLinhas
+    ){
+        printf("coordenada do navio horizontal invalida");
+        return 1;
+    }
+    else if(posLinhaNavioHorizontal-1 + tamanhoNavioHorizontal > nLinhas){
+        printf("navio muito grande para o tabuleiro na posicao (%d,%d)", posLinhaNavioHorizontal, posColunaNavioHorizontal);
+        return 1;
+    }
+    int posicoes[tamanhoNavioHorizontal];
+    for(int i = 0; i < tamanhoNavioHorizontal; i++){
+        posicoes[i] = tabuleiro[posLinhaNavioHorizontal-1][posColunaNavioHorizontal-1 + i];
+    }
+    if(verificarPosicoes(posicoes, tamanhoNavioHorizontal) == true){
+        printf("nao foi possivel posicionar o navio horizontal, conflito com outro navio\n");
+        return 1;
+    }
+    for(int i = 0; i < tamanhoNavioHorizontal; i++){
+        tabuleiro[posLinhaNavioHorizontal-1][i + posColunaNavioHorizontal-1] = navioHorizontal[i];
+    }
 
+    //mostrar resultado do tabuleiro
+    for(int i = 0; i < nLinhas; i++){
+        for(int j = 0; j < nColunas; j++){
+            printf("%d ", tabuleiro[i][j]);
+        }
+        printf("\n");
+    }
     return 0;
 }
